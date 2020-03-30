@@ -1,0 +1,30 @@
+{
+  "name": "interview-task",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Dmytro Troshchuk <troshchukdmitry@gmail.com>",
+  "scripts": {
+    "build": "tsc && eslint **/*.ts",
+    "upload": "ts-node ./src/upload.ts",
+    "report": "ts-node ./src/report.ts"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.5.4",
+    "@types/node": "^12.12.14",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "export-to-csv": "^0.2.1",
+    "fast-deep-equal": "^3.1.1",
+    "mongodb": "^3.5.4"
+  }
+}
