@@ -1,18 +1,24 @@
 import {Db, MongoClient} from 'mongodb';
 import Patient from "./model/Patient";
 import Email from "./model/Email";
-import readData from "./dataReader";
+import processData from "./dataProcessor";
+import connectToMongo from "./mongo";
+import validate from "./patientValidator"
 
-function uploadPatientData(db: Db, patients: Patient[]): Promise<void> {
+async function uploadPatientData(db: Db, patients: Patient[]): Promise<void> {
     const patientCollection = db.collection('Patients');
 
-    return patientCollection.insertMany(patients).then();
+    if (patients.length > 0) {
+        return patientCollection.insertMany(patients).then();
+    }
 }
 
-function uploadEmails(db: Db, emails: Email[]): Promise<void> {
+async function uploadEmails(db: Db, emails: Email[]): Promise<void> {
     const patientCollection = db.collection('Emails');
 
-    return patientCollection.insertMany(emails).then();
+    if (emails.length > 0) {
+        return patientCollection.insertMany(emails).then();
+    }
 }
 
 function createEmails(memberId: number, email: string): Email[] {
@@ -29,21 +35,24 @@ function createEmails(memberId: number, email: string): Email[] {
 
 async function upload(client: MongoClient): Promise<void> {
     try {
-    const db = client.db('health');
-    const patients = readData();
+        const db = client.db('health');
 
-    await uploadPatientData(db, patients);
+        await processData(async patients => {
+            const validPatients = patients.filter(patient => !validate(patient));
 
-    const emails = patients.filter(patient => patient.consent && patient.email != '')
-        .map(patient => createEmails(patient.memberId, patient.email))
-        .flatMap(emails => emails);
+            await uploadPatientData(db, validPatients);
 
-    await uploadEmails(db, emails);
+            const emails = patients.filter(patient => patient.consent && patient.email != '')
+                .map(patient => createEmails(patient.memberId, patient.email))
+                .flatMap(emails => emails);
+
+            await uploadEmails(db, emails);
+        });
     } finally {
         await client.close();
     }
 }
 
-MongoClient.connect('mongodb://localhost:27017')
+connectToMongo()
     .then(client => upload(client))
     .catch(reason => console.error(`Cant process data. Reason: ${reason.errmsg}`));

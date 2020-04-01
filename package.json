@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/mongodb": "^3.5.4",
     "@types/node": "^12.12.14",
+    "@types/n-readlines": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.21.0",
     "eslint": "^6.8.0",
@@ -23,8 +24,10 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "email-validator": "^2.0.4",
     "export-to-csv": "^0.2.1",
     "fast-deep-equal": "^3.1.1",
-    "mongodb": "^3.5.4"
+    "mongodb": "^3.5.4",
+    "n-readlines": "^1.0.0"
   }
 }
